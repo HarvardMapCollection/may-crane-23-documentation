@@ -31,6 +31,7 @@ for index, js in enumerate(json_files):
         identifier = json_text['dc_identifier_s']
         # The name of the resource
         title = json_text['dc_title_s']
+        # At minimum, this is a reiteration of the title in sentence format. Other relevant information, such as data creation methods, data sources, and special licenses, may also be included.
         description = json_text['dc_description_s']
         # Signals access in the geoportal and is indicated by a padlock icon. Users need to sign in to download restricted items
         # Controlled vocabulary: "Public" or "Restricted"
