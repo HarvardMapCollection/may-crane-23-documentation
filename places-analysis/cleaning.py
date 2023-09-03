@@ -16,10 +16,11 @@
 
 # Imports 
 import pandas as pd
+import numpy as np
 import re 
 
 # Read all-metadata.csv 
-df = pd.read_csv('{FILE-PATH}/all_metadata.csv')
+df = pd.read_csv('/Users/viviannguyen/Documents/GitHub/may-crane-23-documentation/places-analysis/data/all_metadata.csv')
 
 # Currently, the 'spatial' and 'subject' data are lists of string(s) represented as strings.
 # This is inconvenient to work with, so let's turn them into true lists of strings
@@ -39,4 +40,4 @@ df['spatial'] = [[clean_string(word) for word in row] for row in df['spatial']]
 df['subject'] = [[clean_string(word) for word in row] for row in df['subject']]
 
 # Export
-df.to_csv('{FILE-PATH}/data/cleaned_df.csv', index = False)
+df.to_csv('/Users/viviannguyen/Documents/GitHub/may-crane-23-documentation/places-analysis/data/cleaned_df.csv', index = False)

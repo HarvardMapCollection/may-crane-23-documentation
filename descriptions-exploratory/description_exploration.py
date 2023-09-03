@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from transformers import pipeline
 
 # Read all-metadata.csv 
-df = pd.read_csv('{FILE-PATH}/all_metadata.csv')
+df = pd.read_csv('{FILE-PATH}/full_df.csv')
 
 # Print average length in characters
 print(np.mean([len(desc) for desc in df['description']]))

@@ -94,4 +94,4 @@ for index, js in enumerate(json_files):
         jsons_df.loc[index] = [GBL_version, identifier, title, description, rights, provenance, references, ID, slug, geom_type, modified, creator, publisher, format, type, subject, spatial, issued, temporal, geom, year, harvard_collection_ID]
 
 # Save to .csv
-jsons_df.to_csv('{FILE-PATH}/data/all_metadata.csv', index = False)
+jsons_df.to_csv('{FILE-PATH}/all_metadata.csv', index = False)

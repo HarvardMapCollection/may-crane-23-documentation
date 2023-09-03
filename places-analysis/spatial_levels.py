@@ -26,6 +26,7 @@ from geopy.exc import GeocoderUnavailable
 
 # Read all-metadata.csv 
 df = pd.read_csv('{FILE-PATH}/cleaned_df.csv')
+df['spatial'] = [eval(row) for row in df['spatial']]
 
 # US States
 states_abbs = [ 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
@@ -113,8 +114,90 @@ def get_location(loc):
 # Apply the get_location function to each row of the DataFrame
 location = df.apply(lambda row: get_location(row['spatial'][0]), axis = 1)
 
-# Display the updated DataFrame
-print(location)
+# Create new columns to store data we just extracted
+continent = []
+country = []
+state = []
+city = []
+continents = ["North America", "South America", "Europe", "Africa", "Asia", "Australia", "Antarctica"]
+count = 1
+for row in location:
+    if row == "Geocoding information not found":
+        continent.append("World")
+        city.append("None")
+        country.append("None")
+        state.append("None")
+    elif len(row) == 0:
+        continent.append("None")
+        city.append("None")
+        country.append("None")
+        state.append("None")
+    elif len(row) == 1:
+        if row[0] in continents:
+            continent.append(row[0]) 
+            country.append("None")
+        else: 
+            continent.append("None") 
+            country.append(row[0])
+        state.append("None")
+        city.append("None")
+    elif len(row) == 2:
+        continent.append("None")
+        state.append(row[0])
+        country.append(row[1])
+        city.append("None")
+    else:
+        continent.append("None")
+        city.append(row[0])
+        state.append(row[1])
+        country.append(row[2])
+
+df['city'] = city
+df['country'] = country
+df['state'] = state
+df['location'] = location
+
+continents = {
+    'NA': 'North America',
+    'North America': 'North America',
+    'SA': 'South America',
+    'South America': 'South America', 
+    'AS': 'Asia',
+    'Asia': 'Asia',
+    'OC': 'Australia',
+    'Australia': 'Australia',
+    'AF': 'Africa',
+    'Africa': 'Africa',
+    'EU': 'Europe',
+    'Europe': 'Europe',
+    'Antarctica': 'Antarctica',
+    'World': 'World',
+    'None': 'None'
+}
+
+# Map abbreviated countries to their full names and countries to continents
+def name_to_country(index):
+    try:
+        if df["country"][index].strip() == "None":
+            return "None"
+        else:
+            return country_name_to_country_alpha2(df["country"][index].strip())
+    except:
+        return "None"
+    
+def country_to_cont(country):
+    try:
+        return country_alpha2_to_continent_code(country)
+    except:
+        return "None"
+
+def country_to_cont_wrapper(country, index): 
+    if country == "None":
+        return df['continent'][index]
+    else: 
+        return country_to_cont(country)
+
+df['continent'] = [continents[country_to_cont_wrapper(name_to_country(df["country"][index]), index)] for index in range(len(df["country"]))]
 
 # Export
-df.to_csv('{FILE-PATH}/data/full_df.csv', index = False)
+df.to_csv('{FILE-PATH}/full_df.csv', index = False)
